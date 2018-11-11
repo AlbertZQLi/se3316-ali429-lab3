@@ -27,6 +27,8 @@ var router = express.Router();              // get an instance of the express Ro
 // middleware to use for all requests
 router.use(function(req, res, next) {
     // do logging
+    //   res.header("Access-Control-Allow-Origin", "*");
+    // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     console.log('Something is happening.');
     next(); // make sure we go to the next routes and don't stop here
 });
@@ -34,7 +36,8 @@ router.use(function(req, res, next) {
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
+    // res.json({ message: 'hooray! welcome to our api!' });
+    res.send("here");
 });
 
 // more routes for our API will happen here
@@ -105,18 +108,7 @@ router.route('/bears/:bear_id')
             });
 
         });
-    })
-    .delete(function(req, res) {
-        Bear.remove({
-            _id: req.params.bear_id
-        }, function(err, bear) {
-            if (err)
-                res.send(err);
-
-            res.json({ message: 'Successfully deleted' });
-        });
     });
-
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

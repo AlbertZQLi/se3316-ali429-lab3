@@ -28,10 +28,28 @@ function createCORSRequest(method, url) {
   }
   
   function display(){
+  
+   
       url = "https://se3316-nodejs-ali429.c9users.io/api/bears"
       fetch(url)
       .then((resp) => resp.json()) // Transform the data into json
       .then(function(data) {
-        console.log(data[0]._id);
+        console.log(data);
+        
+        for(var i = 0; i < data.length; i++){
+        
+   var items = document.getElementById('items');
+    var id = document.createElement('p');
+
+      id.appendChild(document.createTextNode(data[i].name));
+
+    items.appendChild(id);
+        }
+    
         })
-      }
+
+    
+        
+
+    
+}

@@ -89,9 +89,9 @@ router.route('/bears/:bear_id')
         Bear.findById(req.params.bear_id, function(err, bear) {
             if (err)
                 res.send(err);
+             
             res.json(bear);
         })
-    return;
     })
     .put(function(req, res) {
 
@@ -100,19 +100,24 @@ router.route('/bears/:bear_id')
 
             if (err)
                 res.send(err);
-
-            bear.name = req.body.name;  // update the bears info
+        
+            if(req.body.switch)
+            bear.quantity = req.body.quantity;
+            else
+            bear.tax = req.body.tax;
+            
+            // update the bears info
 
             // save the bear
             bear.save(function(err) {
                 if (err)
                     res.send(err);
+                    return;
 
                 res.json({ message: 'Bear updated!' });
             });
 
         });
-        return;
     })
     .delete(function(req, res) {
         Bear.remove({

@@ -104,18 +104,45 @@ function initialize(){
   deleteDiv.appendChild(deleteInput)
   deleteDiv.appendChild(deleteButton);
   
-/*  var updateDiv = document.getElementById("updateDiv");
+  var updateDiv = document.getElementById("updateDiv");
   
   var updateInput = document.createElement("input");
   updateInput.setAttribute("id","updateInput");
-  var updateButton = document.createElement("button");
-  updateButton.setAttribute("id", "updateButton");
-  updateButton.appendChild(document.createTextNode("Update Item"));
-  updateButton.setAttribute("onClick", "deleteItem()");*/
-  /*  
-    deleteDiv.appendChild(document.createElement("p").appendChild(document.createTextNode("Item to be deleted: ")));
-    deleteDiv.appendChild(deleteInput)
-    deleteDiv.appendChild(deleteButton);*/
+  var updateQuantInput = document.createElement("input");
+  updateQuantInput.setAttribute("id","updateQuantInput");
+  var updateTaxInput = document.createElement("input");
+  updateTaxInput.setAttribute("id","updateTaxInput");
+  var updateQuantButton = document.createElement("button");
+  updateQuantButton.setAttribute("id", "updateQuantButton");
+  updateQuantButton.appendChild(document.createTextNode("Update Item Quantity"));
+  updateQuantButton.setAttribute("onClick", "updateItem(0)");
+  var updateTaxButton = document.createElement("button");
+  updateTaxButton.setAttribute("id", "updateTaxButton");
+  updateTaxButton.appendChild(document.createTextNode("Update Item Tax"));
+  updateTaxButton.setAttribute("onClick", "updateItem(1)");
+    updateDiv.appendChild(document.createElement("p").appendChild(document.createTextNode("Item to be updated: ")));
+    updateDiv.appendChild(updateInput)
+    updateDiv.appendChild(document.createElement("p").appendChild(document.createTextNode("Update Quantity: ")));
+    updateDiv.appendChild(updateQuantInput)
+    updateDiv.appendChild(document.createElement("p").appendChild(document.createTextNode("Update Tax: ")));
+    updateDiv.appendChild(updateTaxInput)
+    updateDiv.appendChild(updateQuantButton);
+    updateDiv.appendChild(updateTaxButton);
+    
+    
+  var inddiv = document.getElementById("input");
+  
+  var indInput = document.createElement("input");
+  indInput.setAttribute("id", "indInput");
+  var indButton = document.createElement("button");
+  indButton.setAttribute("id", "indButton");
+  indButton.appendChild(document.createTextNode("Get Item"));
+  indButton.setAttribute("onClick", "individual()");
+  
+  inddiv.appendChild(document.createElement("p").appendChild(document.createTextNode("Item to get: ")));
+  inddiv.appendChild(indInput);
+  inddiv.appendChild(indButton);
+  
   
 }
 
@@ -130,8 +157,7 @@ function addItem(){
   data.append('name', nameInput);
   data.append('price', priceInput);
   data.append('quantity',parseInt(quantInput));
-    data.append('tax',parseInt(taxInput));
-  
+  data.append('tax',parseInt(taxInput));
   
   var request = new Request(url, {
     method: 'POST',
@@ -172,3 +198,78 @@ function deleteItem(){
     location.reload();
   
 };
+
+function updateItem(switchInt){
+  
+  var updateInput = document.getElementById("updateInput");
+  var updateQuant = document.getElementById("updateQuantInput");
+  var updateTax = document.getElementById("updateTaxInput");
+
+  
+
+  var updateData;
+  var url = "https://se3316-nodejs-ali429.c9users.io/api/bears/"+updateInput.value;
+  
+  switch(switchInt){
+    case 0:
+      {
+
+    console.log(updateQuant.value)
+    updateData =  new URLSearchParams();
+    updateData.append('quantity', updateQuant.value);
+    updateData.append('switch', true)
+     var updateRequest = new Request(url, {
+    method: 'PUT',
+    body:updateData
+  })
+  fetch(updateRequest)
+  .then(function(data){
+    console.log('sent')
+    console.log(data);
+  
+    })
+    location.reload();
+
+    break;
+        
+      }
+    case 1:
+      {
+     updateData =  new URLSearchParams();
+     updateData.append('tax', updateTax.value)
+     console.log(updateTax.value)
+      var updateRequest = new Request(url, {
+    method: 'PUT',
+    body:updateData
+  })
+  fetch(updateRequest)
+  .then(function(data){
+    console.log('sent')
+    console.log(data);
+  
+    })
+    location.reload();
+
+     break;
+      }
+  }
+  
+}
+
+function individual(){
+  var indName = document.getElementById("indInput").value;
+  
+  var display = document.getElementById("display")
+  
+  var url = "https://se3316-nodejs-ali429.c9users.io/api/bears/"+indName;
+  
+  console.log(url)
+
+  fetch(url)
+  .then((resp)=> resp.json())
+  .then(function(data){
+    console.log(data);
+    console.log("got");
+    display.innerHTML= "ID: "+ data._id+", Name: "+data.name+", Quantity: "+data.quantity+", Price: "+data.price+", Tax: ", data.price;
+  })
+}

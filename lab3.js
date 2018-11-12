@@ -39,11 +39,14 @@ function createCORSRequest(method, url) {
         for(var i = 0; i < data.length; i++){
         
    var items = document.getElementById('items');
-    var id = document.createElement('p');
+    var itemp = document.createElement('p');
+    
+      itemp.appendChild(document.createTextNode("Item name: "+ data[i].name+", price: $"+data[i].price+", quantity: " + data[i].quantity+", tax: "+data[i].tax+"%, id: "+data[i]._id));
+      
+      
 
-      id.appendChild(document.createTextNode(data[i].name));
+    items.appendChild(itemp);
 
-    items.appendChild(id);
         }
     
         })
@@ -53,3 +56,119 @@ function createCORSRequest(method, url) {
 
     
 }
+
+function initialize(){
+  var options = document.getElementById("options");
+  
+  var nameInput = document.createElement("input");
+  nameInput.setAttribute("id", "nameInput");
+
+  var priceInput = document.createElement("input");
+  priceInput.setAttribute("id", "priceInput");
+  
+  var quantInput = document.createElement("input");
+  quantInput.setAttribute("id", "quantInput");
+  
+  var taxInput = document.createElement("input");
+  taxInput.setAttribute("id", "taxInput");
+  taxInput.setAttribute("value", 0);
+  
+  var inputButton = document.createElement("button");
+  inputButton.setAttribute("id", "inputButton");
+  inputButton.appendChild(document.createTextNode("Add Item"));
+  inputButton.setAttribute("onClick", "addItem()");
+  
+  options.appendChild(document.createElement("p").appendChild(document.createTextNode("Item Name: ")));
+  options.appendChild(nameInput);
+  
+  options.appendChild(document.createElement("p").appendChild(document.createTextNode("Item Price: ")));
+  options.appendChild(priceInput);
+  
+  options.appendChild(document.createElement("p").appendChild(document.createTextNode("Item Quantity: ")));
+  options.appendChild(quantInput);
+  
+  options.appendChild(document.createElement("p").appendChild(document.createTextNode("Item Tax: ")));
+  options.appendChild(taxInput);
+  options.appendChild(inputButton);
+  
+  var deleteDiv = document.getElementById("deleteDiv");
+  
+  var deleteInput = document.createElement("input");
+  deleteInput.setAttribute("id","deleteInput");
+  var deleteButton = document.createElement("button");
+  deleteButton.setAttribute("id", "deleteButton");
+  deleteButton.appendChild(document.createTextNode("Delete Item"));
+  deleteButton.setAttribute("onClick", "deleteItem()");
+  
+  deleteDiv.appendChild(document.createElement("p").appendChild(document.createTextNode("Item to be deleted: ")));
+  deleteDiv.appendChild(deleteInput)
+  deleteDiv.appendChild(deleteButton);
+  
+/*  var updateDiv = document.getElementById("updateDiv");
+  
+  var updateInput = document.createElement("input");
+  updateInput.setAttribute("id","updateInput");
+  var updateButton = document.createElement("button");
+  updateButton.setAttribute("id", "updateButton");
+  updateButton.appendChild(document.createTextNode("Update Item"));
+  updateButton.setAttribute("onClick", "deleteItem()");*/
+  /*  
+    deleteDiv.appendChild(document.createElement("p").appendChild(document.createTextNode("Item to be deleted: ")));
+    deleteDiv.appendChild(deleteInput)
+    deleteDiv.appendChild(deleteButton);*/
+  
+}
+
+function addItem(){
+   var url = "https://se3316-nodejs-ali429.c9users.io/api/bears"
+   var nameInput = document.getElementById("nameInput").value;
+   var priceInput = document.getElementById("priceInput").value;  
+   var quantInput = document.getElementById("quantInput").value;
+   var taxInput = document.getElementById("taxInput").value;
+  var data = new URLSearchParams();
+  
+  data.append('name', nameInput);
+  data.append('price', priceInput);
+  data.append('quantity',parseInt(quantInput));
+    data.append('tax',parseInt(taxInput));
+  
+  
+  var request = new Request(url, {
+    method: 'POST',
+    body:data
+  })
+  fetch(request)
+  .then(function(data){
+    console.log(data);
+
+    })
+    location.reload();
+  
+}
+
+
+
+document.addEventListener("DOMContentLoaded", function(event){
+  
+  display();
+  initialize();
+  
+})
+
+function deleteItem(){
+  
+  var deleteInput = document.getElementById("deleteInput").value;
+
+   var url = "https://se3316-nodejs-ali429.c9users.io/api/bears/"+deleteInput;
+   console.log(url)
+  
+  var deleteReq = new Request(url, {
+    method: 'DELETE'
+  })
+  fetch(deleteReq)
+  .then(function(data){
+    console.log(data);
+    })
+    location.reload();
+  
+};
